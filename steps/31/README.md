@@ -107,10 +107,21 @@ export default class App extends Controller {
     onPress(event: Event): void {
         const item = event.getSource() as ObjectListItem;
         const router = (this.getOwnerComponent() as Component).getRouter();
+        const bindingContext = item.getBindingContext("invoice");
+    
+        // Check if the bindingContext is null or undefined
+        if (!bindingContext) {
+            return;
+        }
+    
+        // Get the path, removing the leading '/'
+        const invoicePath = bindingContext.getPath().substr(1);
+    
+        // Navigate to the detail route with the encoded invoice path
         router.navTo("detail", {
-            invoicePath: window.encodeURIComponent(item.getBindingContext("invoice").getPath().substr(1))
+            invoicePath: window.encodeURIComponent(invoicePath)
         });
-    }     
+    }    
 };
 ```
 
