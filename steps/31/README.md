@@ -140,17 +140,28 @@ import { Route$PatternMatchedEvent } from "sap/ui/core/routing/Route";
 export default class Detail extends Controller {
 
     onInit(): void {
-        const router = (this.getOwnerComponent() as Component).getRouter();
-        router.getRoute("detail").attachPatternMatched(this.onObjectMatched, this);
+        const router = (this.getOwnerComponent() as Component)?.getRouter();
+        const route = router?.getRoute("detail");
+        if (route) {
+            route.attachPatternMatched(this.onObjectMatched, this);
+        } else {
+            console.error("Route 'detail' not found");
+        }
     }
 
     onObjectMatched(event: Route$PatternMatchedEvent): void {
-        this.getView().bindElement({
-            path: "/" + window.decodeURIComponent( (event.getParameter("arguments") as any).invoicePath),
-            model: "invoice"
-        });
+        const view = this.getView();
+        if (view) {
+            view.bindElement({
+                path: "/" + window.decodeURIComponent((event.getParameter("arguments") as any).invoicePath),
+                model: "invoice"
+            });
+        } else {
+            console.error("View is not available");
+        }
     }
-};
+}
+
 ```
 ***
 
